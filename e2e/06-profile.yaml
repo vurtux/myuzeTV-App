@@ -1,0 +1,65 @@
+# E2E Test: Profile Screen
+# Tests stats, subscription status, logout, guest state
+# Prerequisite: User is logged in
+
+url: http://localhost:8082
+tags:
+  - profile
+  - auth
+---
+
+- launchApp
+
+# ─── Test 1: Profile Shows User Info ───
+- tapOn:
+    id: "tab-profile"
+
+# Should show user name (test account)
+- assertVisible: "Test Free User"
+  optional: true
+
+# ─── Test 2: Stats Section ───
+- assertVisible: "Saved"
+- assertVisible: "Seen"
+- assertVisible: "Hours"
+
+# ─── Test 3: No Edit Profile Button ───
+- assertNotVisible: "Edit Profile"
+
+# ─── Test 4: Account Section ───
+- scroll:
+    direction: DOWN
+
+- assertVisible: "Language"
+- assertVisible: "Privacy Policy"
+- assertVisible: "Terms of Service"
+
+# ─── Test 5: App Version ───
+- assertVisible: "App Version"
+  optional: true
+
+# ─── Test 6: Logout Flow ───
+- tapOn:
+    id: "logout-btn"
+    optional: true
+
+# Confirmation modal
+- assertVisible: "Are you sure"
+  optional: true
+
+# Cancel logout
+- tapOn: "Cancel"
+  optional: true
+
+# ─── Test 7: Delete Account ───
+- tapOn:
+    id: "delete-account-btn"
+    optional: true
+
+# First confirmation
+- assertVisible: "Are you sure"
+  optional: true
+
+# Cancel
+- tapOn: "Cancel"
+  optional: true

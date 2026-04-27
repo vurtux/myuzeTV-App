@@ -1,0 +1,194 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Richer Midnight Palette */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    
+    --card: 240 10% 6%;
+    --card-foreground: 0 0% 98%;
+    
+    --popover: 240 10% 4%;
+    --popover-foreground: 0 0% 98%;
+    
+    /* Premium Accessible Red Palette */
+    --primary: 0 84% 60%; /* Vibrant high-contrast red */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 240 5% 15%;
+    --secondary-foreground: 0 0% 98%;
+    
+    --muted: 240 5% 12%;
+    --muted-foreground: 240 4% 75%;
+    
+    --accent: 0 84% 60%;
+    --accent-foreground: 0 0% 98%;
+    
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    
+    --border: 240 5% 18%;
+    --input: 240 5% 18%;
+    --ring: 0 84% 60%;
+    
+    --radius: 0.75rem; /* Base radius for cards and panels. Nav/buttons use rounded-full */
+
+    --badge-green: 142 76% 55%;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Apple-style typography scales */
+  .text-display {
+    font-size: 2.5rem;
+    line-height: 1.1;
+    font-weight: 800;
+    letter-spacing: -0.05em;
+  }
+  
+  .text-title {
+    font-size: 1.25rem;
+    line-height: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .glass-dark {
+    background-color: rgba(9, 9, 11, 0.7);
+    backdrop-filter: blur(12px);
+  }
+
+  .vignette-bottom {
+    background-image: linear-gradient(to top, rgba(9, 9, 11, 1) 0%, rgba(9, 9, 11, 0.4) 50%, transparent 100%);
+  }
+}
+
+/* Hide Safari/WebKit native video controls and play button overlay */
+video::-webkit-media-controls {
+  display: none !important;
+}
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+video::-webkit-media-controls-panel {
+  display: none !important;
+}
+
+/* ─── Scoped transitions (not on *, only interactive elements) ─── */
+button,
+a,
+[role="button"],
+[data-pressable] {
+  transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+  transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1); /* Strong ease-out for transforms */
+  transition-duration: 150ms;
+}
+
+/* Override React Native Web's inline transition: 1e-05s on Pressable elements */
+[tabindex] {
+  transition-duration: 150ms !important;
+  transition-timing-function: cubic-bezier(0.23, 1, 0.32, 1) !important;
+}
+
+/* ─── Focus-visible for keyboard accessibility (WCAG 2.1 AA) ─── */
+:focus-visible {
+  outline: 2px solid hsl(0 84% 60% / 0.5);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Hover states for desktop (gated behind pointer:fine) ─── */
+@media (hover: hover) and (pointer: fine) {
+  /* Cards lift on hover */
+  [data-card]:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Buttons dim on hover */
+  button:hover,
+  [role="button"]:hover {
+    opacity: 0.85;
+  }
+
+  /* Menu items get subtle background */
+  [data-menu-item]:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* ─── Reduced motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ─── Web app-like behavior ─── */
+
+/* Prevent text selection on interactive elements */
+body {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  overflow: hidden;
+  overscroll-behavior: none;
+  width: 100%;
+  height: 100%;
+  background-color: #09090b;
+}
+
+/* Allow text selection only on text inputs */
+input, textarea {
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+/* Prevent pull-to-refresh and overscroll bounce */
+html {
+  overscroll-behavior: none;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+/* Prevent pinch-zoom via touch */
+html, body {
+  touch-action: manipulation;
+}
+
+/* Ensure full-screen app feel */
+#root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Scrollbar styling for dark theme */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}

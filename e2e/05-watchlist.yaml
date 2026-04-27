@@ -1,0 +1,28 @@
+# E2E Test: Watchlist
+# Tests add/remove, grid display, navigation
+# Prerequisite: User is logged in
+
+url: http://localhost:8082
+tags:
+  - watchlist
+---
+
+- launchApp
+
+# ─── Test 1: Navigate to Watchlist ───
+- tapOn:
+    id: "tab-watchlist"
+
+# Should see watchlist screen
+- assertVisible: "Watchlist"
+
+# ─── Test 2: Empty or Populated State ───
+# If empty, should show empty illustration
+# If populated, should show drama cards
+
+- wait: 2000
+
+# ─── Test 3: Navigate Back to Home ───
+- tapOn:
+    id: "tab-home"
+- assertVisible: "Home"

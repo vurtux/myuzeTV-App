@@ -1,0 +1,119 @@
+# E2E Test: Video Player
+# Tests playback, swipe navigation, controls, episode drawer
+# Prerequisite: User is logged in
+
+url: http://localhost:8082
+tags:
+  - player
+  - critical
+---
+
+- launchApp
+
+# Navigate to home and open a drama
+- tapOn:
+    id: "tab-home"
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 5000
+
+# Scroll to content and tap a drama
+- scroll:
+    direction: DOWN
+- wait: 1000
+
+# Navigate to detail and play
+- tapOn:
+    id: "play-cta-btn"
+    optional: true
+
+# ─── Test 1: Player Loads ───
+- extendedWaitUntil:
+    visible:
+      id: "player-back-btn"
+    timeout: 10000
+    optional: true
+
+# Wait for video to start
+- wait: 3000
+
+# ─── Test 2: Tap to Show Controls ───
+- tapOn:
+    point: "50%,50%"
+
+# Controls should be visible
+- assertVisible:
+    id: "player-play-btn"
+    optional: true
+
+# ─── Test 3: Play/Pause ───
+- tapOn:
+    id: "player-play-btn"
+    optional: true
+- wait: 1000
+- tapOn:
+    point: "50%,50%"
+- tapOn:
+    id: "player-play-btn"
+    optional: true
+
+# ─── Test 4: Like Button ───
+- tapOn:
+    point: "50%,50%"
+- tapOn:
+    id: "player-like-btn"
+    optional: true
+- wait: 300
+
+# ─── Test 5: Episode Drawer ───
+- tapOn:
+    point: "50%,50%"
+- tapOn:
+    id: "player-episodes-btn"
+    optional: true
+- wait: 500
+
+# Drawer should show episode numbers
+- assertVisible: "Episodes"
+  optional: true
+
+# Close drawer
+- pressKey: Escape
+  optional: true
+
+# ─── Test 6: Swipe to Next Episode ───
+- swipe:
+    direction: UP
+    duration: 300
+
+# Wait for next episode to load and autoplay
+- wait: 3000
+
+# Should now be on episode 2
+- tapOn:
+    point: "50%,50%"
+- wait: 500
+
+# ─── Test 7: Swipe to Previous Episode ───
+- swipe:
+    direction: DOWN
+    duration: 300
+- wait: 3000
+
+# ─── Test 8: Speed Control ───
+- tapOn:
+    point: "50%,50%"
+- tapOn:
+    id: "speed-btn"
+    optional: true
+- wait: 300
+- tapOn: "1.5x"
+  optional: true
+- wait: 300
+
+# ─── Test 9: Back Navigation ───
+- tapOn:
+    point: "50%,50%"
+- tapOn:
+    id: "player-back-btn"
+    optional: true

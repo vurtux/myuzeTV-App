@@ -1,0 +1,140 @@
+# E2E Test: Player Swipe Navigation (Episode Feed)
+# Tests real swipe gestures for episode-to-episode navigation
+# Key regression: swiping past EP 3 must work (was stuck at 3rd episode)
+# Prerequisite: None (logs in as premium user)
+
+url: http://localhost:8082/login
+tags:
+  - player
+  - swipe
+  - critical
+  - regression
+---
+
+# ─── Login as Premium User ───
+
+- extendedWaitUntil:
+    visible:
+      text: ".*"
+    timeout: 120000
+
+- tapOn:
+    id: "country-picker"
+    optional: true
+- tapOn: "United States"
+  optional: true
+- tapOn:
+    id: "phone-input"
+    optional: true
+- inputText: "0000000002"
+- tapOn:
+    id: "send-otp-btn"
+    optional: true
+
+- extendedWaitUntil:
+    visible: "Enter Code"
+    timeout: 5000
+
+- inputText: "123456"
+- tapOn:
+    id: "verify-otp-btn"
+    optional: true
+
+# Wait for home screen
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 10000
+
+# ─── Navigate to a Drama Detail Page ───
+
+- scroll:
+    direction: DOWN
+- wait: 1000
+
+# Wait for play CTA to appear (we're on a detail page or a drama card was tapped)
+- extendedWaitUntil:
+    visible:
+      id: "play-cta-btn"
+    timeout: 10000
+    optional: true
+
+# ─── Start Playing EP 1 ───
+
+- tapOn:
+    id: "play-cta-btn"
+    optional: true
+
+# Wait for player to load
+- extendedWaitUntil:
+    visible: "EP 1"
+    timeout: 15000
+
+- takeScreenshot: swipe-nav-ep1
+
+# ─── Test 1: Assert EP 1 Badge ───
+- assertVisible: "EP 1"
+
+# Wait for video to start loading/playing
+- wait: 3000
+
+# ─── Test 2: Swipe Up to EP 2 ───
+- swipe:
+    direction: UP
+    duration: 300
+
+- wait: 2000
+- assertVisible: "EP 2"
+- takeScreenshot: swipe-nav-ep2
+
+# ─── Test 3: Swipe Up to EP 3 ───
+- swipe:
+    direction: UP
+    duration: 300
+
+- wait: 2000
+- assertVisible: "EP 3"
+- takeScreenshot: swipe-nav-ep3
+
+# ─── Test 4: Swipe Up to EP 4 (KEY REGRESSION — was stuck at EP 3) ───
+- swipe:
+    direction: UP
+    duration: 300
+
+- wait: 2000
+- assertVisible: "EP 4"
+- takeScreenshot: swipe-nav-ep4-regression-pass
+
+# ─── Test 5: Swipe Down back to EP 3 (reverse navigation) ───
+- swipe:
+    direction: DOWN
+    duration: 300
+
+- wait: 2000
+- assertVisible: "EP 3"
+- takeScreenshot: swipe-nav-back-ep3
+
+# ─── Test 6: Swipe Down back to EP 2 ───
+- swipe:
+    direction: DOWN
+    duration: 300
+
+- wait: 2000
+- assertVisible: "EP 2"
+- takeScreenshot: swipe-nav-back-ep2
+
+# ─── Test 7: Swipe Down back to EP 1 ───
+- swipe:
+    direction: DOWN
+    duration: 300
+
+- wait: 2000
+- assertVisible: "EP 1"
+- takeScreenshot: swipe-nav-back-ep1
+
+# ─── Cleanup: Exit Player ───
+- tapOn:
+    point: "50%,50%"
+- wait: 500
+- tapOn:
+    id: "player-back-btn"
+    optional: true

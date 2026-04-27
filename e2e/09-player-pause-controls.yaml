@@ -1,0 +1,155 @@
+# E2E Test: Player Pause/Resume Controls
+# Tests that tap-to-show-controls, play/pause toggle, and control icons work correctly
+# Prerequisite: None (logs in as premium user)
+
+url: http://localhost:8082/login
+tags:
+  - player
+  - controls
+---
+
+# ─── Login as Premium User ───
+
+- extendedWaitUntil:
+    visible:
+      text: ".*"
+    timeout: 120000
+
+- tapOn:
+    id: "country-picker"
+    optional: true
+- tapOn: "United States"
+  optional: true
+- tapOn:
+    id: "phone-input"
+    optional: true
+- inputText: "0000000002"
+- tapOn:
+    id: "send-otp-btn"
+    optional: true
+
+- extendedWaitUntil:
+    visible: "Enter Code"
+    timeout: 5000
+
+- inputText: "123456"
+- tapOn:
+    id: "verify-otp-btn"
+    optional: true
+
+# Wait for home screen
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 10000
+
+# ─── Navigate to Player ───
+
+- scroll:
+    direction: DOWN
+- wait: 1000
+
+- extendedWaitUntil:
+    visible:
+      id: "play-cta-btn"
+    timeout: 10000
+    optional: true
+
+- tapOn:
+    id: "play-cta-btn"
+    optional: true
+
+# Wait for player to fully load (EP 1 badge visible)
+- extendedWaitUntil:
+    visible: "EP 1"
+    timeout: 15000
+
+# ─── Test 1: Wait for Video to Load and Autoplay ───
+
+# Video should start autoplaying — wait for it to buffer
+- wait: 5000
+- takeScreenshot: pause-controls-playing
+
+# ─── Test 2: Tap Screen to Show Controls ───
+
+- tapOn:
+    point: "50%,50%"
+
+# Controls should now be visible — play/pause button should appear
+- extendedWaitUntil:
+    visible:
+      id: "player-play-btn"
+    timeout: 3000
+
+- takeScreenshot: pause-controls-overlay-visible
+
+# ─── Test 3: Tap Pause Button ───
+
+- tapOn:
+    id: "player-play-btn"
+
+# Video should now be paused — wait a moment
+- wait: 3000
+
+- takeScreenshot: pause-controls-paused
+
+# ─── Test 4: Verify Video is Paused ───
+
+# Tap screen to ensure controls are visible (they may have faded since we paused)
+- tapOn:
+    point: "50%,50%"
+- wait: 500
+
+# Play button should be visible (play icon shows when paused)
+- assertVisible:
+    id: "player-play-btn"
+
+- takeScreenshot: pause-controls-paused-icon
+
+# ─── Test 5: Tap Play Button to Resume ───
+
+- tapOn:
+    id: "player-play-btn"
+
+# Video should resume playing
+- wait: 2000
+
+# ─── Test 6: Verify Video is Playing Again ───
+
+# Tap screen to show controls
+- tapOn:
+    point: "50%,50%"
+- wait: 500
+
+# Pause icon should be visible (pause icon shows when playing)
+- assertVisible:
+    id: "player-play-btn"
+
+- takeScreenshot: pause-controls-resumed
+
+# ─── Test 7: Speed Control ───
+
+# Controls should still be visible from previous tap
+- tapOn:
+    id: "speed-btn"
+    optional: true
+
+- wait: 300
+
+# Speed picker should show options
+- assertVisible: "1.5x"
+  optional: true
+
+# Select 1.5x speed
+- tapOn: "1.5x"
+  optional: true
+
+- wait: 500
+- takeScreenshot: pause-controls-speed-changed
+
+# ─── Cleanup: Exit Player ───
+- tapOn:
+    point: "50%,50%"
+- wait: 500
+- tapOn:
+    id: "player-back-btn"
+    optional: true

@@ -1,0 +1,33 @@
+# Helper: Login with test free user
+# Reusable flow — call with: runFlow: helpers/login-test-user.yaml
+
+appId: com.myuze.tv
+---
+
+- tapOn:
+    id: "country-picker"
+    optional: true
+- tapOn: "United States"
+  optional: true
+- tapOn:
+    id: "phone-input"
+    optional: true
+- inputText: "0000000001"
+- tapOn:
+    id: "send-otp-btn"
+    optional: true
+
+# Wait for OTP screen
+- extendedWaitUntil:
+    visible: "Enter Code"
+    timeout: 3000
+
+- inputText: "123456"
+- tapOn:
+    id: "verify-otp-btn"
+    optional: true
+
+# Wait for home screen
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 5000

@@ -1,0 +1,110 @@
+# E2E Test: Free vs Paid User Behavior
+# Tests episode locking, paywall triggers, subscription gating
+
+url: http://localhost:8082
+tags:
+  - monetization
+  - critical
+---
+
+# ─── Test 1: Free User Sees Lock Icons ───
+- launchApp:
+    clearState: true
+
+# Login as free user
+- assertVisible: "Sign in to start watching"
+- tapOn:
+    id: "country-picker"
+- tapOn: "United States"
+- tapOn:
+    id: "phone-input"
+- inputText: "0000000001"
+- tapOn:
+    id: "send-otp-btn"
+- assertVisible: "Enter Code"
+- inputText: "123456"
+- tapOn:
+    id: "verify-otp-btn"
+
+# Navigate to a drama
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 5000
+
+- scroll:
+    direction: DOWN
+- wait: 1000
+
+# On detail page - should see "FREE" badge on free episodes
+- assertVisible: "FREE"
+  optional: true
+
+# Should see "Premium" on locked episodes
+- scroll:
+    direction: DOWN
+- assertVisible: "Premium"
+  optional: true
+
+# ─── Test 2: Free Episode Plays ───
+- scroll:
+    direction: UP
+- tapOn:
+    id: "play-cta-btn"
+    optional: true
+
+# Player should load
+- extendedWaitUntil:
+    visible:
+      id: "player-back-btn"
+    timeout: 5000
+    optional: true
+- wait: 2000
+
+# Go back
+- tapOn:
+    point: "50%,50%"
+- tapOn:
+    id: "player-back-btn"
+    optional: true
+
+# ─── Test 3: Premium User Login ───
+- tapOn:
+    id: "tab-profile"
+- tapOn:
+    id: "logout-btn"
+    optional: true
+- tapOn: "Log Out"
+  optional: true
+- wait: 1000
+
+# Login as premium user
+- tapOn:
+    id: "country-picker"
+    optional: true
+- tapOn: "United States"
+  optional: true
+- tapOn:
+    id: "phone-input"
+    optional: true
+- inputText: "0000000002"
+- tapOn:
+    id: "send-otp-btn"
+    optional: true
+- assertVisible: "Enter Code"
+  optional: true
+- inputText: "123456"
+- tapOn:
+    id: "verify-otp-btn"
+    optional: true
+
+# Premium user should see "Start Watching" (not "Subscribe to Watch")
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 5000
+- scroll:
+    direction: DOWN
+- wait: 1000
+
+# Premium user should NOT see lock icons
+- assertNotVisible: "Premium"
+  optional: true

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "296118662863",
+    "project_id": "myuzetv",
+    "storage_bucket": "myuzetv.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:296118662863:android:a4c6f249cfe76deb1229ba",
+        "android_client_info": {
+          "package_name": "com.app.myuzetv"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbuKmBfwBeo5TYzkIdrqv-fGY7eqEmiis"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

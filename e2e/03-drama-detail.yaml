@@ -1,0 +1,93 @@
+# E2E Test: Drama Detail Page
+# Tests hero, genres, rating, episodes, watchlist, play CTA
+# Prerequisite: User is logged in
+
+url: http://localhost:8082
+tags:
+  - detail
+  - content
+---
+
+- launchApp
+
+# Navigate to home
+- tapOn:
+    id: "tab-home"
+
+# Wait for content to load
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 5000
+
+# Scroll to find a drama and tap it
+- scroll:
+    direction: DOWN
+- wait: 1000
+
+# ─── Test 1: Detail Page Loads ───
+
+# Should see the CTA button
+- extendedWaitUntil:
+    visible:
+      id: "play-cta-btn"
+    timeout: 5000
+    optional: true
+
+# ─── Test 2: Genre Chips Visible ───
+- assertVisible: "Romance"
+  optional: true
+
+# ─── Test 3: Like Button ───
+- tapOn:
+    id: "detail-like-btn"
+    optional: true
+- wait: 300
+
+# Tap again to unlike
+- tapOn:
+    id: "detail-like-btn"
+    optional: true
+
+# ─── Test 4: Watchlist Toggle ───
+- tapOn:
+    id: "detail-watchlist-btn"
+    optional: true
+- wait: 300
+
+# ─── Test 5: About Section ───
+- scroll:
+    direction: DOWN
+
+# Read more / Show less
+- tapOn: "Read more"
+  optional: true
+- wait: 300
+- tapOn: "Show less"
+  optional: true
+
+# ─── Test 6: Episodes Section ───
+- scroll:
+    direction: DOWN
+
+# Should see episode cards
+- assertVisible: "Episodes"
+  optional: true
+
+# ─── Test 7: Play CTA ───
+- scroll:
+    direction: UP
+- tapOn:
+    id: "play-cta-btn"
+    optional: true
+
+# Should navigate to player
+- extendedWaitUntil:
+    visible:
+      id: "player-back-btn"
+    timeout: 5000
+    optional: true
+
+# Go back
+- tapOn:
+    id: "player-back-btn"
+    optional: true

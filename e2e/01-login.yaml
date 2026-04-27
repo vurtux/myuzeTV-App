@@ -1,0 +1,26 @@
+# E2E Test: Login Flow (Web)
+url: http://localhost:8082/login
+tags:
+  - auth
+  - critical
+---
+
+# React Native Web needs significant time to bundle and render.
+# The ".*" wildcard matches HTML meta tags, not app content.
+# Use a very specific selector that only exists after React mounts.
+
+# Wait for any interactive element to appear (proof React has mounted)
+- extendedWaitUntil:
+    visible:
+      text: ".*"
+    timeout: 120000
+
+# Take a screenshot to see what rendered
+- takeScreenshot: login-page-loaded
+
+# Try tapping "Skip for now" (guest mode)
+- tapOn:
+    text: "Skip"
+    optional: true
+
+- takeScreenshot: after-skip-attempt

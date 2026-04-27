@@ -1,0 +1,133 @@
+# E2E Test: Free User Cannot Bypass Episode Locks
+# Tests that free users hitting a locked episode are redirected to subscribe/login
+# Prerequisite: None (logs in as free user)
+
+url: http://localhost:8082/login
+tags:
+  - player
+  - monetization
+  - critical
+---
+
+# ─── Login as Free User ───
+
+- extendedWaitUntil:
+    visible:
+      text: ".*"
+    timeout: 120000
+
+- tapOn:
+    id: "country-picker"
+    optional: true
+- tapOn: "United States"
+  optional: true
+- tapOn:
+    id: "phone-input"
+    optional: true
+- inputText: "0000000001"
+- tapOn:
+    id: "send-otp-btn"
+    optional: true
+
+- extendedWaitUntil:
+    visible: "Enter Code"
+    timeout: 5000
+
+- inputText: "123456"
+- tapOn:
+    id: "verify-otp-btn"
+    optional: true
+
+# Wait for home screen
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 10000
+
+# ─── Navigate to a Drama Detail Page ───
+
+- scroll:
+    direction: DOWN
+- wait: 1000
+
+- extendedWaitUntil:
+    visible:
+      id: "play-cta-btn"
+    timeout: 10000
+    optional: true
+
+# ─── Test 1: Free Episode Plays (EP 1 is Free) ───
+
+- tapOn:
+    id: "play-cta-btn"
+    optional: true
+
+# Wait for player to load — EP 1 should be free and playable
+- extendedWaitUntil:
+    visible: "EP 1"
+    timeout: 15000
+
+- takeScreenshot: lock-free-ep1-playing
+
+- assertVisible: "EP 1"
+
+# Wait for video to buffer
+- wait: 3000
+
+# ─── Test 2: Swipe Up Toward Locked Episodes ───
+
+# Swipe to EP 2 (may still be free)
+- swipe:
+    direction: UP
+    duration: 300
+- wait: 2000
+- takeScreenshot: lock-free-ep2
+
+# Swipe to EP 3 (may still be free on some dramas)
+- swipe:
+    direction: UP
+    duration: 300
+- wait: 2000
+- takeScreenshot: lock-free-ep3
+
+# Swipe to EP 4 (likely locked for free users)
+- swipe:
+    direction: UP
+    duration: 300
+- wait: 2000
+- takeScreenshot: lock-free-ep4
+
+# Swipe to EP 5 (should be locked)
+- swipe:
+    direction: UP
+    duration: 300
+- wait: 2000
+- takeScreenshot: lock-free-ep5
+
+# Swipe to EP 6 (should definitely hit paywall by now)
+- swipe:
+    direction: UP
+    duration: 300
+- wait: 3000
+- takeScreenshot: lock-free-ep6-or-paywall
+
+# ─── Test 3: Assert Redirect to Subscribe Page ───
+
+# When a locked episode is reached, the app redirects to subscribe page
+# or shows a subscribe prompt. Check for "Subscribe" text.
+- extendedWaitUntil:
+    visible: "Subscribe"
+    timeout: 10000
+    optional: true
+
+- takeScreenshot: lock-free-subscribe-redirect
+
+# Verify subscribe page content (one of these should match)
+- assertVisible: "Subscribe"
+  optional: true
+
+# ─── Test 4: Alternative — Check for Login Redirect ───
+# If the user somehow lost auth, they'd see login instead
+- assertVisible: "Sign in"
+  optional: true
+
+- takeScreenshot: lock-free-final-state

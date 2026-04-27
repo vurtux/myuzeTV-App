@@ -1,0 +1,82 @@
+{
+  "name": "myuzetv-app",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "build:web": "expo export --platform web",
+    "build:deploy": "npm run build:web && node scripts/inject-config.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:e2e": "npx playwright test",
+    "test:e2e:ui": "npx playwright test --ui",
+    "test:e2e:headed": "npx playwright test --headed"
+  },
+  "jest": {
+    "preset": "jest-expo/web",
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/v0-reference/",
+      "/e2e-playwright/"
+    ],
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@shopify/flash-list|@tanstack/react-query|lucide-react-native|nativewind)"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx"
+    ]
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-firebase/analytics": "^23.8.6",
+    "@react-native-firebase/app": "^23.8.6",
+    "@react-native-firebase/crashlytics": "^23.8.6",
+    "@shopify/flash-list": "^2.2.2",
+    "@tanstack/react-query": "^5.90.21",
+    "@types/react": "~19.1.10",
+    "axios": "^1.13.5",
+    "babel-preset-expo": "^54.0.10",
+    "expo": "~54.0.33",
+    "expo-application": "~6.0.2",
+    "expo-av": "~16.0.8",
+    "expo-device": "~7.0.2",
+    "expo-image": "~3.0.11",
+    "expo-linking": "^8.0.11",
+    "expo-router": "~6.0.23",
+    "expo-secure-store": "~15.0.8",
+    "expo-status-bar": "~3.0.9",
+    "firebase": "^12.9.0",
+    "lucide-react-native": "^0.564.0",
+    "mixpanel-react-native": "^3.3.0",
+    "nativewind": "^4.2.1",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
+    "react-native": "0.81.5",
+    "react-native-expo-moengage": "^1.1.0",
+    "react-native-moengage": "^12.5.0",
+    "react-native-reanimated": "4.1.1",
+    "react-native-safe-area-context": "~5.6.0",
+    "react-native-svg": "^15.15.3",
+    "react-native-web": "^0.21.0",
+    "react-native-worklets": "0.5.1",
+    "tailwindcss": "^3.4.19",
+    "typescript": "~5.9.2"
+  },
+  "private": true,
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.3.0",
+    "jest-expo": "~54.0.0",
+    "react-test-renderer": "^19.1.0"
+  }
+}

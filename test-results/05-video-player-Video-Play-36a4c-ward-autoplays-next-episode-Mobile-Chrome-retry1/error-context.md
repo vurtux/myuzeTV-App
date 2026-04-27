@@ -1,0 +1,283 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e5]:
+      - generic [ref=e7]:
+        - img [ref=e10]
+        - generic [ref=e14]:
+          - generic [ref=e21]:
+            - generic [ref=e24] [cursor=pointer]:
+              - img [ref=e26]
+              - generic [ref=e29]:
+                - generic [ref=e32]: Family Drama
+                - generic [ref=e33]: The Phoenix Conspiracy
+                - generic [ref=e34]:
+                  - generic [ref=e35]:
+                    - img [ref=e36]
+                    - generic [ref=e38]: Watch Now
+                  - img [ref=e40]
+            - generic [ref=e45] [cursor=pointer]:
+              - img [ref=e47]
+              - img [ref=e51]
+              - generic [ref=e57]:
+                - generic [ref=e60]: Family Drama
+                - generic [ref=e61]: Masala Steps
+                - generic [ref=e62]:
+                  - generic [ref=e63]:
+                    - img [ref=e64]
+                    - generic [ref=e66]: Watch Now
+                  - img [ref=e68]
+            - generic [ref=e73] [cursor=pointer]:
+              - img [ref=e75]
+              - generic [ref=e78]:
+                - generic [ref=e81]: Family Drama
+                - generic [ref=e82]: The Missing Piece
+                - generic [ref=e83]:
+                  - generic [ref=e84]:
+                    - img [ref=e85]
+                    - generic [ref=e87]: Watch Now
+                  - img [ref=e89]
+            - generic [ref=e94] [cursor=pointer]:
+              - img [ref=e96]
+              - generic [ref=e99]:
+                - generic [ref=e102]: Family Drama
+                - generic [ref=e103]: The Best Is Yet To Come
+                - generic [ref=e104]:
+                  - generic [ref=e105]:
+                    - img [ref=e106]
+                    - generic [ref=e108]: Watch Now
+                  - img [ref=e110]
+          - generic [ref=e123]:
+            - generic [ref=e125] [cursor=pointer]: All
+            - generic [ref=e127] [cursor=pointer]: Romance
+            - generic [ref=e129] [cursor=pointer]: Thriller
+            - generic [ref=e131] [cursor=pointer]: Fantasy
+            - generic [ref=e133] [cursor=pointer]: Comedy
+            - generic [ref=e135] [cursor=pointer]: Family Drama
+          - generic [ref=e136]:
+            - generic [ref=e137]:
+              - generic [ref=e138]: All Dramas
+              - generic [ref=e143]:
+                - generic [ref=e145] [cursor=pointer]:
+                  - img [ref=e148]
+                  - generic [ref=e150]:
+                    - generic [ref=e151]: The Phoenix Conspiracy
+                    - generic [ref=e152]: Family Drama
+                - generic [ref=e154] [cursor=pointer]:
+                  - img [ref=e157]
+                  - generic [ref=e159]:
+                    - generic [ref=e160]: Masala Steps
+                    - generic [ref=e161]: Family Drama
+                - generic [ref=e163] [cursor=pointer]:
+                  - img [ref=e166]
+                  - generic [ref=e168]:
+                    - generic [ref=e169]: The Missing Piece
+                    - generic [ref=e170]: Family Drama
+                - generic [ref=e172] [cursor=pointer]:
+                  - img [ref=e175]
+                  - generic [ref=e177]:
+                    - generic [ref=e178]: The Best Is Yet To Come
+                    - generic [ref=e179]: Family Drama
+                - generic [ref=e181] [cursor=pointer]:
+                  - img [ref=e184]
+                  - generic [ref=e186]:
+                    - generic [ref=e187]: The Haunted Sister
+                    - generic [ref=e188]: Family Drama
+                - generic [ref=e190] [cursor=pointer]:
+                  - img [ref=e193]
+                  - generic [ref=e195]:
+                    - generic [ref=e196]: School Hall
+                    - generic [ref=e197]: Family Drama
+                - generic [ref=e199] [cursor=pointer]:
+                  - img [ref=e202]
+                  - generic [ref=e204]:
+                    - generic [ref=e205]: Killer Romance
+                    - generic [ref=e206]: Family Drama
+                - generic [ref=e208] [cursor=pointer]:
+                  - img [ref=e211]
+                  - generic [ref=e213]:
+                    - generic [ref=e214]: One Night Stand
+                    - generic [ref=e215]: Family Drama
+                - generic [ref=e217] [cursor=pointer]:
+                  - img [ref=e220]
+                  - generic [ref=e222]:
+                    - generic [ref=e223]: The CEO
+                    - generic [ref=e224]: Family Drama
+                - generic [ref=e226] [cursor=pointer]:
+                  - img [ref=e229]
+                  - generic [ref=e231]:
+                    - generic [ref=e232]: The Chauffeur
+                    - generic [ref=e233]: Family Drama
+                - generic [ref=e235] [cursor=pointer]:
+                  - img [ref=e238]
+                  - generic [ref=e240]:
+                    - generic [ref=e241]: Hidden Agenda
+                    - generic [ref=e242]: Family Drama
+            - generic [ref=e243]:
+              - generic [ref=e244]: Romance
+              - generic [ref=e249]:
+                - generic [ref=e251] [cursor=pointer]:
+                  - img [ref=e254]
+                  - generic [ref=e256]:
+                    - generic [ref=e257]: Masala Steps
+                    - generic [ref=e258]: Family Drama
+                - generic [ref=e260] [cursor=pointer]:
+                  - img [ref=e263]
+                  - generic [ref=e265]:
+                    - generic [ref=e266]: The Missing Piece
+                    - generic [ref=e267]: Family Drama
+                - generic [ref=e269] [cursor=pointer]:
+                  - img [ref=e272]
+                  - generic [ref=e274]:
+                    - generic [ref=e275]: The Best Is Yet To Come
+                    - generic [ref=e276]: Family Drama
+                - generic [ref=e278] [cursor=pointer]:
+                  - img [ref=e281]
+                  - generic [ref=e283]:
+                    - generic [ref=e284]: Killer Romance
+                    - generic [ref=e285]: Family Drama
+                - generic [ref=e287] [cursor=pointer]:
+                  - img [ref=e290]
+                  - generic [ref=e292]:
+                    - generic [ref=e293]: One Night Stand
+                    - generic [ref=e294]: Family Drama
+                - generic [ref=e296] [cursor=pointer]:
+                  - img [ref=e299]
+                  - generic [ref=e301]:
+                    - generic [ref=e302]: The CEO
+                    - generic [ref=e303]: Family Drama
+                - generic [ref=e305] [cursor=pointer]:
+                  - img [ref=e308]
+                  - generic [ref=e310]:
+                    - generic [ref=e311]: The Chauffeur
+                    - generic [ref=e312]: Family Drama
+                - generic [ref=e314] [cursor=pointer]:
+                  - img [ref=e317]
+                  - generic [ref=e319]:
+                    - generic [ref=e320]: Undercovered Heart
+                    - generic [ref=e321]: Family Drama
+                - generic [ref=e323] [cursor=pointer]:
+                  - img [ref=e326]
+                  - generic [ref=e328]:
+                    - generic [ref=e329]: Love me or I die
+                    - generic [ref=e330]: Family Drama
+                - generic [ref=e332] [cursor=pointer]:
+                  - img [ref=e335]
+                  - generic [ref=e337]:
+                    - generic [ref=e338]: Sisters Have Crush On The Same Man
+                    - generic [ref=e339]: Family Drama
+                - generic [ref=e341] [cursor=pointer]:
+                  - img [ref=e344]
+                  - generic [ref=e346]:
+                    - generic [ref=e347]: Tied By Fate
+                    - generic [ref=e348]: Family Drama
+            - generic [ref=e349]:
+              - generic [ref=e350]: Thriller & Mystery
+              - generic [ref=e355]:
+                - generic [ref=e357] [cursor=pointer]:
+                  - img [ref=e360]
+                  - generic [ref=e362]:
+                    - generic [ref=e363]: The Phoenix Conspiracy
+                    - generic [ref=e364]: Family Drama
+                - generic [ref=e366] [cursor=pointer]:
+                  - img [ref=e369]
+                  - generic [ref=e371]:
+                    - generic [ref=e372]: Hidden Agenda
+                    - generic [ref=e373]: Family Drama
+                - generic [ref=e375] [cursor=pointer]:
+                  - img [ref=e378]
+                  - generic [ref=e380]:
+                    - generic [ref=e381]: Killer Romance
+                    - generic [ref=e382]: Family Drama
+            - generic [ref=e383]:
+              - generic [ref=e384]: Family Drama
+              - generic [ref=e389]:
+                - generic [ref=e391] [cursor=pointer]:
+                  - img [ref=e394]
+                  - generic [ref=e396]:
+                    - generic [ref=e397]: Sisters Have Crush On The Same Man
+                    - generic [ref=e398]: Family Drama
+                - generic [ref=e400] [cursor=pointer]:
+                  - img [ref=e403]
+                  - generic [ref=e405]:
+                    - generic [ref=e406]: The Inheritance Game
+                    - generic [ref=e407]: Family Drama
+                - generic [ref=e409] [cursor=pointer]:
+                  - img [ref=e412]
+                  - generic [ref=e414]:
+                    - generic [ref=e415]: Faded Threads
+                    - generic [ref=e416]: Family Drama
+            - generic [ref=e417]:
+              - generic [ref=e418]: Corporate & Boss
+              - generic [ref=e423]:
+                - generic [ref=e425] [cursor=pointer]:
+                  - img [ref=e428]
+                  - generic [ref=e430]:
+                    - generic [ref=e431]: The CEO
+                    - generic [ref=e432]: Family Drama
+                - generic [ref=e434] [cursor=pointer]:
+                  - img [ref=e437]
+                  - generic [ref=e439]:
+                    - generic [ref=e440]: The Chauffeur
+                    - generic [ref=e441]: Family Drama
+            - generic [ref=e442]:
+              - generic [ref=e443]: Destiny & Fate
+              - generic [ref=e448]:
+                - generic [ref=e450] [cursor=pointer]:
+                  - img [ref=e453]
+                  - generic [ref=e455]:
+                    - generic [ref=e456]: Tied By Fate
+                    - generic [ref=e457]: Family Drama
+                - generic [ref=e459] [cursor=pointer]:
+                  - img [ref=e462]
+                  - generic [ref=e464]:
+                    - generic [ref=e465]: Twisted Fates
+                    - generic [ref=e466]: Family Drama
+                - generic [ref=e468] [cursor=pointer]:
+                  - img [ref=e471]
+                  - generic [ref=e473]:
+                    - generic [ref=e474]: Destined To Be
+                    - generic [ref=e475]: Family Drama
+            - generic [ref=e476]:
+              - generic [ref=e477]: Comedy
+              - generic [ref=e484] [cursor=pointer]:
+                - img [ref=e487]
+                - generic [ref=e489]:
+                  - generic [ref=e490]: Trollerz
+                  - generic [ref=e491]: Family Drama
+            - generic [ref=e492]:
+              - generic [ref=e493]: Supernatural
+              - generic [ref=e500] [cursor=pointer]:
+                - img [ref=e503]
+                - generic [ref=e505]:
+                  - generic [ref=e506]: The Haunted Sister
+                  - generic [ref=e507]: Family Drama
+            - generic [ref=e508]:
+              - generic [ref=e509]: Teen & Coming of Age
+              - generic [ref=e516] [cursor=pointer]:
+                - img [ref=e519]
+                - generic [ref=e521]:
+                  - generic [ref=e522]: School Hall
+                  - generic [ref=e523]: Family Drama
+        - generic [ref=e525]:
+          - img [ref=e527]
+          - generic [ref=e528]:
+            - img [ref=e530] [cursor=pointer]
+            - img [ref=e534]
+      - generic [ref=e538]:
+        - generic [ref=e540] [cursor=pointer]:
+          - img [ref=e541]
+          - generic [ref=e544]: Home
+        - generic [ref=e547] [cursor=pointer]:
+          - img [ref=e548]
+          - generic [ref=e550]: Watchlist
+        - generic [ref=e552] [cursor=pointer]:
+          - img [ref=e553]
+          - generic [ref=e556]: Me
+    - generic:
+      - img
+  - iframe [ref=e557]:
+    
+```

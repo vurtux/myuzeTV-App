@@ -1,0 +1,8 @@
+# Maestro E2E Test Configuration for myuzeTV Web
+# Run: maestro test --platform web e2e/
+
+# Test account credentials
+env:
+  TEST_PHONE: "0000000001"
+  TEST_OTP: "123456"
+  BASE_URL: "http://localhost:8082"

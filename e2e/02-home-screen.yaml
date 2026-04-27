@@ -1,0 +1,67 @@
+# E2E Test: Home Screen
+# Tests hero carousel, genre chips, search, navigation
+# Prerequisite: User is logged in (run 01-login.yaml first)
+
+url: http://localhost:8082
+tags:
+  - home
+  - discovery
+---
+
+- launchApp
+
+# ─── Test 1: Home Screen Loads ───
+
+# Verify home tab is active
+- tapOn:
+    id: "tab-home"
+
+# Hero carousel should be visible (auto-rotates)
+# Wait a moment for data to load
+- extendedWaitUntil:
+    visible: "Home"
+    timeout: 5000
+
+# ─── Test 2: Genre Chips ───
+
+# Genre chips should be visible
+- assertVisible: "All"
+- assertVisible: "Romance"
+- assertVisible: "Thriller"
+
+# Tap a genre chip to filter
+- tapOn: "Romance"
+# Wait for filter
+- wait: 500
+
+# Tap "All" to reset
+- tapOn: "All"
+- wait: 500
+
+# ─── Test 3: Search ───
+
+# Open search
+- tapOn:
+    id: "search-btn"
+
+# Search overlay should appear
+- assertVisible: "Enter phone number"
+  optional: true
+
+# Type a search query
+- inputText: "love"
+- wait: 500
+
+# Close search (back or X)
+- pressKey: Escape
+
+# ─── Test 4: Drama Card Navigation ───
+
+# Scroll down to find a drama rail
+- scroll:
+    direction: DOWN
+
+# Tap on any visible drama poster/card
+- tapOn:
+    text: "Start Watching"
+    optional: true

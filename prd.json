@@ -1,0 +1,732 @@
+{
+  "project": "myuzeTV",
+  "branchName": "ralph/gap-closure",
+  "description": "myuzeTV Gap Closure - Fix video player, redesign detail page, wire backend features, add table-stakes features with comprehensive tests",
+  "userStories": [
+    {
+      "id": "US-001",
+      "title": "Backend: Create continue-watching API endpoint",
+      "description": "As a developer, I need a backend endpoint that returns dramas the user is currently watching, sorted by last watched time.",
+      "acceptanceCriteria": [
+        "Create WatchProgressController with continueWatching() method at GET /api/continue-watching",
+        "Query WatchProgress where is_completed=false, ordered by last_watched_at DESC, limit 20",
+        "Eager load drama and episode relationships to avoid N+1",
+        "Return drama info + current episode number + progress_seconds",
+        "Requires auth:sanctum middleware",
+        "Register route in routes/api.php",
+        "Typecheck passes"
+      ],
+      "priority": 1,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-002",
+      "title": "Backend: Create drama search API endpoint",
+      "description": "As a developer, I need a search endpoint that supports full-text search and genre filtering.",
+      "acceptanceCriteria": [
+        "Add search() method to DramaController at GET /api/dramas/search",
+        "Accept query params: q (search term), genre (genre enum value)",
+        "Full-text search on title and description fields using MySQL LIKE or FULLTEXT",
+        "Genre filter matches drama.genre enum column",
+        "Returns paginated results (20 per page) using DramaResource",
+        "Empty q with genre set returns all dramas in that genre",
+        "Register route in routes/api.php (public, no auth required)",
+        "Typecheck passes"
+      ],
+      "priority": 2,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-003",
+      "title": "Backend: Create delete account endpoint",
+      "description": "As a developer, I need an account deletion endpoint for App Store / Play Store compliance.",
+      "acceptanceCriteria": [
+        "Add deleteAccount() method to AuthController at DELETE /api/auth/account",
+        "Deletes user's watchlist, watch_progress, likes, and subscriptions",
+        "Revokes all Sanctum tokens for the user",
+        "Soft-deletes or hard-deletes the user record",
+        "Returns 200 with success message",
+        "Requires auth:sanctum middleware",
+        "Register route in routes/api.php",
+        "Typecheck passes"
+      ],
+      "priority": 3,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-004",
+      "title": "Backend: Enhance UserResource with computed stats",
+      "description": "As a developer, I need the GET /auth/me response to include user activity stats.",
+      "acceptanceCriteria": [
+        "UserResource includes watchlist_count: count of user's watchlist entries",
+        "UserResource includes completed_dramas_count: count of dramas where all episodes completed",
+        "UserResource includes total_watch_seconds: sum of progress_seconds from watch_progress",
+        "Stats computed via Eloquent relationships (withCount or subqueries)",
+        "Existing UserResource fields unchanged",
+        "Typecheck passes"
+      ],
+      "priority": 4,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-005",
+      "title": "Frontend API: Add watch progress and continue-watching functions",
+      "description": "As a developer, I need frontend API functions to save progress and fetch continue-watching data.",
+      "acceptanceCriteria": [
+        "Add saveProgress(episodeId, progressSeconds, isCompleted) function to api/dramas.js",
+        "saveProgress calls POST /episodes/{id}/progress with { progress_seconds, is_completed }",
+        "Add fetchContinueWatching() function that calls GET /continue-watching",
+        "Both functions use the existing authenticated axios client",
+        "saveProgress is fire-and-forget (no error thrown to caller)",
+        "Typecheck passes"
+      ],
+      "priority": 5,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-006",
+      "title": "Frontend API: Add search, subscription, and account deletion functions",
+      "description": "As a developer, I need API functions for search, subscription plans, and account deletion.",
+      "acceptanceCriteria": [
+        "Add searchDramas(query, genre) function calling GET /dramas/search?q=&genre=",
+        "Add fetchSubscriptionPlans(platform) function calling GET /subscription/plans",
+        "Add checkSubscriptionStatus() function calling GET /subscription/status",
+        "Add deleteAccount() function calling DELETE /auth/account",
+        "Create new file api/subscription.js for subscription functions",
+        "Create new file api/account.js for account deletion function",
+        "Typecheck passes"
+      ],
+      "priority": 6,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-007",
+      "title": "Frontend API: Add like drama toggle function",
+      "description": "As a developer, I need a frontend function to toggle likes via the backend API.",
+      "acceptanceCriteria": [
+        "Add likeDrama(dramaId) function to api/dramas.js",
+        "Calls POST /dramas/{id}/like",
+        "Returns updated like count and liked status",
+        "Uses authenticated axios client",
+        "Typecheck passes"
+      ],
+      "priority": 7,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-008",
+      "title": "Frontend API: Add fetchDramaDetail function for real backend data",
+      "description": "As a developer, I need a function that fetches drama detail from GET /dramas/{slug} instead of using mock data.",
+      "acceptanceCriteria": [
+        "Add fetchDramaDetail(slug) function to api/dramas.js",
+        "Calls GET /dramas/{slug} endpoint",
+        "Maps response to DramaDetail interface: title, banner (banner_url), genre, total_episodes, free_episodes, rating, year (from release_date), country, description, episodes array",
+        "Episodes sorted by episode_number ascending",
+        "Episode status derived: number <= free_episodes ? 'free' : 'locked' (check subscription)",
+        "Typecheck passes"
+      ],
+      "priority": 8,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-009",
+      "title": "Create reusable SkeletonBox component with shimmer animation",
+      "description": "As a user, I want to see content-shaped shimmer placeholders while screens load.",
+      "acceptanceCriteria": [
+        "Create components/SkeletonBox.tsx with configurable width, height, borderRadius props",
+        "Shimmer animation: light gradient sweeps left-to-right on 1.5s loop",
+        "Uses react-native-reanimated for native-driver animation (60fps)",
+        "Base color: dark gray (matches bg-background), shimmer: slightly lighter",
+        "Exported as default component",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 9,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-010",
+      "title": "Create SkeletonRail and SkeletonHero compound skeleton components",
+      "description": "As a developer, I need pre-built skeleton layouts that mimic DramaRail and HeroUnit.",
+      "acceptanceCriteria": [
+        "Create components/SkeletonRail.tsx mimicking DramaRail: title bar + 5 horizontal card placeholders",
+        "Create components/SkeletonHero.tsx mimicking HeroUnit: full-width banner + text placeholders",
+        "Both use SkeletonBox internally",
+        "SkeletonRail cards match DramaRail card dimensions",
+        "SkeletonHero matches hero carousel height",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 10,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-011",
+      "title": "Create GenreChips filter component",
+      "description": "As a user, I want tappable genre chips to filter content on home and search screens.",
+      "acceptanceCriteria": [
+        "Create components/GenreChips.tsx with horizontal scrollable chip bar",
+        "Chips: 'All', 'Romance', 'Thriller', 'Fantasy', 'Comedy', 'Family Drama'",
+        "Active chip: bg-primary text-white, inactive: bg-white/10 text-muted-foreground",
+        "Props: selectedGenre, onSelect callback",
+        "'All' selected by default",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 11,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-012",
+      "title": "Create StarRating display component",
+      "description": "As a user, I want to see visual star ratings showing filled/half/empty stars.",
+      "acceptanceCriteria": [
+        "Create components/StarRating.tsx with props: rating (number 0-5), reviewCount (string)",
+        "Renders 5 star icons: filled (primary color), half-filled, empty (muted color)",
+        "Half-star supported (e.g., 4.5 shows 4 filled + 1 half + 0 empty)",
+        "Numeric rating shown next to stars (e.g., '4.5')",
+        "Review count in parentheses (e.g., '(5.1K reviews)')",
+        "Uses lucide-react-native Star icon",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 12,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-013",
+      "title": "Fix video player swipe gesture detection",
+      "description": "As a user, I want swipe up/down to reliably change episodes without being confused with taps.",
+      "acceptanceCriteria": [
+        "PanResponder checks BOTH displacement (dy > threshold) AND velocity (vy > 0.3) for swipe",
+        "Swipe threshold scales with screen: Math.max(50, screenHeight * 0.05)",
+        "Diagonal swipes where |dx| > |dy| * 0.5 are rejected",
+        "Movements between 15-50px that aren't fast enough do NOT toggle controls",
+        "isSwiping flag uses useRef instead of closure variable",
+        "onPanResponderTerminate handler cancels pending swipe",
+        "Rapid consecutive swipes debounced (300ms)",
+        "Typecheck passes"
+      ],
+      "priority": 13,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-014",
+      "title": "Fix video screen fitting and aspect ratio",
+      "description": "As a user, I want the video to display correctly without cropping on any screen size.",
+      "acceptanceCriteria": [
+        "Video uses ResizeMode.CONTAIN instead of COVER",
+        "Video container fills entire screen with flex: 1",
+        "Aspect ratio read from onLoad event (naturalSize.width / naturalSize.height)",
+        "Black letterbox shown if aspect ratio doesn't match screen",
+        "Works on iPhone SE (375px), iPhone 15 Pro Max (430px), iPad, web",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 14,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-015",
+      "title": "Add episode transition loading state and prevent race conditions",
+      "description": "As a user, I want a loading indicator during episode transitions with no stale stream loading.",
+      "acceptanceCriteria": [
+        "Spinner overlay appears within 100ms of swipe completion",
+        "Spinner disappears when new video starts playing",
+        "If load takes > 5s, show 'Slow connection' message below spinner",
+        "Each episode load has a unique request ID (incrementing counter)",
+        "When new load starts, previous load cancelled (query cancellation or abort)",
+        "Loaded stream always matches current currentEpNumber state",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 15,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-016",
+      "title": "Disable gestures over control buttons and add controls fade animation",
+      "description": "As a user, I want control buttons to work reliably and controls to fade smoothly.",
+      "acceptanceCriteria": [
+        "When controls are visible, PanResponder gesture layer is disabled",
+        "Tapping Like/Share/Episodes buttons works without triggering swipe",
+        "Swiping only active when controls are hidden",
+        "Controls fade in over 200ms when shown (Animated.timing opacity 0→1)",
+        "Controls fade out over 300ms when hidden (opacity 1→0)",
+        "Uses react-native-reanimated or React Native Animated",
+        "Fade animation doesn't block touch events",
+        "Controls auto-hide timer (3.5s) still works normally",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 16,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-017",
+      "title": "Add skip intro button to video player",
+      "description": "As a user, I want to skip episode intros to get straight to the content.",
+      "acceptanceCriteria": [
+        "Skip Intro button appears in bottom-right after 2 seconds of playback",
+        "Button auto-hides after 10 seconds of playback",
+        "Tapping button seeks to 10-second mark (skip point)",
+        "Button has semi-transparent dark bg for visibility (bg-black/70 rounded-lg px-4 py-2)",
+        "Button does NOT appear for episodes shorter than 30 seconds",
+        "Button text: 'Skip Intro' with forward arrow icon",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 17,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-018",
+      "title": "Add boundary feedback and fix episode ID parsing",
+      "description": "As a user, I want clear feedback at first/last episodes and robust ID parsing.",
+      "acceptanceCriteria": [
+        "Swiping up on last episode shows centered toast: 'You've reached the last episode'",
+        "Swiping down on first episode shows toast: 'This is the first episode'",
+        "Toast fades in, stays 2s, fades out",
+        "No episode transition attempted on boundary swipes",
+        "Episode ID parsing handles 'drama-slug-123' format (slug + episode number)",
+        "Episode ID parsing handles '123' plain format",
+        "Invalid episode ID formats show error screen with back button instead of silently defaulting",
+        "Typecheck passes"
+      ],
+      "priority": 18,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-019",
+      "title": "Wire video player like button to backend API",
+      "description": "As a user, I want my episode likes to persist via the backend.",
+      "acceptanceCriteria": [
+        "Like button calls likeDrama(dramaId) API function on tap",
+        "Initial liked state loaded from drama data when episode loads",
+        "Like count updates optimistically (increment/decrement immediately)",
+        "Like state persists across episode changes within same drama",
+        "Error on API call shows subtle error indicator, not a crash",
+        "Guest users prompted to login on like attempt",
+        "Typecheck passes"
+      ],
+      "priority": 19,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-020",
+      "title": "Add web mouse wheel support for episode navigation",
+      "description": "As a web user, I want mouse scroll wheel to navigate between episodes.",
+      "acceptanceCriteria": [
+        "Scroll wheel down = next episode (matches swipe up direction)",
+        "Scroll wheel up = previous episode",
+        "Wheel events debounced at 500ms to prevent rapid firing",
+        "Only active on web platform (Platform.OS === 'web')",
+        "Does not interfere with episode drawer scrolling when drawer is open",
+        "useEffect with wheel event listener, cleaned up on unmount",
+        "Typecheck passes"
+      ],
+      "priority": 20,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-021",
+      "title": "Track watch progress during playback",
+      "description": "As a user, I want my watch progress saved so I can resume where I left off.",
+      "acceptanceCriteria": [
+        "saveProgress() called at 25%, 50%, 75%, and 100% playback milestones",
+        "100% milestone sets is_completed: true",
+        "Progress calls are fire-and-forget (no await, no error thrown)",
+        "Only sends progress if user is authenticated (not guest)",
+        "Debounced: won't re-send same milestone within 5 seconds",
+        "Uses saveProgress function from api/dramas.js (US-005)",
+        "Typecheck passes"
+      ],
+      "priority": 21,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-022",
+      "title": "Replace drama detail mock data with real API calls",
+      "description": "As a developer, I need the detail page to use real backend data instead of mocks.",
+      "acceptanceCriteria": [
+        "Detail page calls fetchDramaDetail(slug) from api/dramas.js (US-008)",
+        "React Query cache key: ['drama', slug]",
+        "All fields mapped: title, banner_url→banner, genre, total_episodes, free_episodes, rating, release_date→year, country, description, episodes",
+        "Episode status derived from: number <= free_episodes ? 'free' : 'locked'",
+        "Delete lib/drama-detail-data.ts mock file",
+        "Remove getDramaDetail import from app/drama/[slug].tsx",
+        "Typecheck passes"
+      ],
+      "priority": 22,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-023",
+      "title": "Make detail page hero responsive and remove duplicate description",
+      "description": "As a user, I want the hero banner to look good on any screen and description shown only once.",
+      "acceptanceCriteria": [
+        "Hero height: Math.min(Math.max(screenHeight * 0.55, 300), 500) pixels",
+        "Uses Dimensions.get('window').height for calculation",
+        "4-stop gradient: from-black/30 via-black/10 via-transparent to-background",
+        "Description removed from title/meta area above CTA",
+        "Description appears only in 'About' section with 3-line truncation",
+        "'Read more' expands, 'Show less' collapses description",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 23,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-024",
+      "title": "Show all genres as chips and add visual star rating to detail page",
+      "description": "As a user, I want to see all drama genres and a visual star rating on the detail page.",
+      "acceptanceCriteria": [
+        "All genres from drama.genre displayed as chips using GenreChips-style styling",
+        "If genre is string, split by comma; if array, show all",
+        "Chips use bg-primary/20 border-primary/30, text 11px uppercase tracking-wide",
+        "Chips flex-wrap to multiple rows if needed",
+        "Star rating uses StarRating component (US-012) below genre chips",
+        "Rating, review count, year, country shown on meta line with dot separators",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 24,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-025",
+      "title": "Remove hero play button and improve CTA text",
+      "description": "As a designer, I want a single clear CTA to start watching.",
+      "acceptanceCriteria": [
+        "Large play button removed from hero center",
+        "'Start Watching' CTA button kept below action bar as single CTA",
+        "CTA shows 'Start Watching - Episode 1 Free' if drama has free episodes",
+        "CTA shows 'Continue Watching - Episode N' if user has watch progress",
+        "CTA shows 'Subscribe to Watch' if no free episodes and not subscribed",
+        "CTA button styling: h-16, bg-primary, rounded-xl, full width minus padding",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 25,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-026",
+      "title": "Show all episodes in virtualized grid and add skeleton loading",
+      "description": "As a user, I want to see all episodes without '+N more' and see skeleton loading while data loads.",
+      "acceptanceCriteria": [
+        "All episodes displayed in 2-column grid (3-column on screens >768px width)",
+        "Uses FlashList with estimatedItemSize: 200 for virtualization",
+        "Episode cards: thumbnail (3:4 aspect), episode number, duration, lock/free/watched status",
+        "Free episodes: 'FREE' badge (top-left, rose-500)",
+        "Locked episodes: dimmed image + lock icon + 'Premium' label",
+        "Watched episodes: check badge (top-right)",
+        "'+N more' card completely removed",
+        "Skeleton loading state shows shimmer grid matching episode layout",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 26,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-027",
+      "title": "Improve 'More Like This' section and wire like button on detail page",
+      "description": "As a user, I want genre-matched recommendations and persistent likes on the detail page.",
+      "acceptanceCriteria": [
+        "Dramas filtered by matching genre (at least one genre overlap with current drama)",
+        "Falls back to all dramas if fewer than 3 genre-matched results",
+        "Maximum 10 dramas shown",
+        "FlashList estimatedItemSize prop set to 130",
+        "Like button calls likeDrama(dramaId) API (US-007) on tap",
+        "Initial liked state loaded from API response",
+        "Like count updates optimistically",
+        "Typecheck passes"
+      ],
+      "priority": 27,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-028",
+      "title": "Add subscription status to AuthContext",
+      "description": "As a developer, I need the auth context to track subscription status for gating features.",
+      "acceptanceCriteria": [
+        "AuthContext stores isSubscribed: boolean and subscriptionExpiresAt: string | null",
+        "On login/auth restore, parse subscription_status and subscription_expires_at from user data",
+        "isSubscribed = subscription_status === 'active' AND expires_at > now",
+        "Episode lock/unlock in DramaDetailScreen uses real isSubscribed (not hardcoded)",
+        "Subscription status re-checked when app returns to foreground (AppState listener)",
+        "Typecheck passes"
+      ],
+      "priority": 28,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-029",
+      "title": "Add Continue Watching rail to home screen",
+      "description": "As a user, I want to see my in-progress dramas at the top of the home screen.",
+      "acceptanceCriteria": [
+        "Continue Watching rail displayed as first rail (position 0) on home screen",
+        "Only shown when user is authenticated AND has watch progress data",
+        "Calls fetchContinueWatching() from api/dramas.js (US-005)",
+        "Each card shows: poster, title, episode number badge, progress bar",
+        "Tapping a card navigates to video player at the last watched episode",
+        "Rail hidden if data is empty (no layout gap)",
+        "React Query cache key: ['continue-watching'], invalidated when returning from player",
+        "Uses existing ContinueWatchingRail.tsx component (modify as needed)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 29,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-030",
+      "title": "Add genre chips to home screen with rail filtering",
+      "description": "As a user, I want to filter the home feed by genre using tappable chips.",
+      "acceptanceCriteria": [
+        "GenreChips component (US-011) placed below hero unit on home screen",
+        "Selecting a genre filters displayed rails to show only dramas matching that genre",
+        "'All' resets to unfiltered view",
+        "Filtering is client-side (filters existing rails data, no API call)",
+        "Filtered state persists while on home screen, resets on pull-to-refresh",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 30,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-031",
+      "title": "Replace home and watchlist spinners with skeleton loading",
+      "description": "As a user, I want skeleton shimmer instead of spinners while content loads.",
+      "acceptanceCriteria": [
+        "Home screen loading state uses SkeletonHero + 3x SkeletonRail (US-010)",
+        "Watchlist loading state uses skeleton grid matching WatchlistCard layout",
+        "ActivityIndicator spinners removed from both screens",
+        "Skeleton replaced by real content without layout shift",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 31,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-032",
+      "title": "Enhance search overlay with genre filter and backend search",
+      "description": "As a user, I want to filter search results by genre using the backend search endpoint.",
+      "acceptanceCriteria": [
+        "GenreChips (US-011) displayed below search input in SearchOverlay",
+        "Search calls searchDramas(query, genre) API function (US-006)",
+        "When genre selected AND query entered: both filters apply",
+        "When only genre selected: shows all dramas in that genre",
+        "Results update with 300ms debounce on input change",
+        "Loading state shows skeleton while fetching",
+        "Empty results show 'No dramas found' message",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 32,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-033",
+      "title": "Fetch real subscription plans on subscribe screen",
+      "description": "As a developer, I need the subscribe screen to show real plans from the API.",
+      "acceptanceCriteria": [
+        "Subscribe screen calls fetchSubscriptionPlans(platform) on mount (US-006)",
+        "Plans displayed dynamically: name, price, currency, billing period, features list",
+        "Platform detected: 'web' for web, 'ios' for iOS, 'android' for Android",
+        "Loading state while fetching plans",
+        "Error state: 'Unable to load plans. Try again.' with retry button",
+        "React Query cache key: ['subscription-plans', platform]",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 33,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-034",
+      "title": "Fix profile screen: remove edit, wire stats, wire delete, show real version",
+      "description": "As a user, I want my profile to show real stats, proper version, and working delete account.",
+      "acceptanceCriteria": [
+        "'Edit Profile' button removed from ProfileScreen",
+        "Stats section fetches from GET /auth/me: watchlist_count, completed_dramas_count, total_watch_seconds",
+        "Hours watched = Math.round(total_watch_seconds / 3600)",
+        "Animated number counters kept for visual polish",
+        "Delete Account button shows confirmation dialog with two-step confirm",
+        "On confirm: calls deleteAccount() API, clears auth state, navigates to login",
+        "App version read from expo-constants (Constants.expoConfig.version)",
+        "Subscription status shows real data from AuthContext (isSubscribed, subscriptionExpiresAt)",
+        "Typecheck passes",
+        "Verify in browser using dev-browser skill"
+      ],
+      "priority": 34,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-035",
+      "title": "Unit tests: Video player gesture and transition logic",
+      "description": "As a developer, I need comprehensive unit tests for the video player.",
+      "acceptanceCriteria": [
+        "Create __tests__/components/VideoPlayer.test.tsx",
+        "Test: swipe up with sufficient velocity triggers next episode",
+        "Test: swipe down with sufficient velocity triggers previous episode",
+        "Test: insufficient velocity does not change episode",
+        "Test: insufficient displacement does not change episode",
+        "Test: diagonal swipe is rejected",
+        "Test: tap with no movement toggles controls",
+        "Test: controls hide after timeout when playing",
+        "Test: skip intro appears at 2s, hides at 10s",
+        "Test: boundary swipe on last episode does not change episode",
+        "Test: like toggle calls API and updates state",
+        "Test: rapid swipes debounce to single transition",
+        "Test: episode ID parsing handles all formats",
+        "All tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 35,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-036",
+      "title": "Unit tests: Drama detail page, skeleton, genre chips, star rating",
+      "description": "As a developer, I need unit tests for the redesigned detail page and new components.",
+      "acceptanceCriteria": [
+        "Create __tests__/components/DramaDetailScreen.test.tsx",
+        "Test: renders all genres as chips",
+        "Test: star rating correct for 4.5, 3.0, 5.0",
+        "Test: description shows 3 lines default, expands on 'Read more'",
+        "Test: CTA text matches user state (new/continuing/subscribe)",
+        "Test: all episodes rendered (not just 5)",
+        "Create __tests__/components/SkeletonBox.test.tsx - renders with correct dimensions",
+        "Create __tests__/components/GenreChips.test.tsx - renders all genres, active state, callback",
+        "Create __tests__/components/StarRating.test.tsx - correct stars for various ratings",
+        "All tests pass",
+        "Typecheck passes"
+      ],
+      "priority": 36,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-037",
+      "title": "Integration tests: API functions",
+      "description": "As a developer, I need integration tests for all API functions.",
+      "acceptanceCriteria": [
+        "Create __tests__/api/dramas.test.js",
+        "Test: fetchDramas returns array with correct shape",
+        "Test: fetchDramaDetail returns drama with episodes",
+        "Test: searchDramas returns filtered results",
+        "Test: likeDrama toggles and returns count",
+        "Test: saveProgress sends correct payload",
+        "Create __tests__/api/watchlist.test.js",
+        "Test: fetchWatchlist, addToWatchlist, removeFromWatchlist",
+        "Create __tests__/api/subscription.test.js",
+        "Test: fetchPlans, checkSubscriptionStatus",
+        "All tests pass with mocked axios",
+        "Typecheck passes"
+      ],
+      "priority": 37,
+      "passes": true,
+      "notes": "Implemented in iteration 2"
+    },
+    {
+      "id": "US-038",
+      "title": "E2E tests: Video player Maestro flows",
+      "description": "As a QA engineer, I need Maestro E2E tests for the video player on simulator.",
+      "acceptanceCriteria": [
+        "Create e2e/player-swipe.yaml Maestro flow",
+        "Test: open drama, tap first episode, video starts",
+        "Test: swipe up navigates to next episode",
+        "Test: swipe down navigates to previous episode",
+        "Test: tap center shows controls",
+        "Test: controls disappear after waiting",
+        "Test: tap like button, count changes",
+        "Test: tap episode drawer, drawer opens",
+        "Test: select episode from drawer loads that episode",
+        "All Maestro flows pass on iOS simulator",
+        "Typecheck passes"
+      ],
+      "priority": 38,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-039",
+      "title": "E2E tests: Detail page and home screen Maestro flows",
+      "description": "As a QA engineer, I need Maestro E2E tests for the detail page and home screen.",
+      "acceptanceCriteria": [
+        "Create e2e/detail-page.yaml: navigate to detail, verify hero/genres/stars/CTA/episodes/more-like-this",
+        "Create e2e/home-screen.yaml: verify hero carousel, genre chips, continue watching rail, search",
+        "Test: tap drama card on home → navigates to detail page",
+        "Test: genre chip tap filters displayed rails",
+        "Test: pull-to-refresh works on home",
+        "Test: search overlay opens, type query, results appear",
+        "Test: tap 'Start Watching' on detail → navigates to player",
+        "Test: watchlist toggle works on detail page",
+        "All Maestro flows pass on iOS simulator",
+        "Typecheck passes"
+      ],
+      "priority": 39,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    },
+    {
+      "id": "US-040",
+      "title": "E2E tests: Profile, watchlist, and auth Maestro flows",
+      "description": "As a QA engineer, I need E2E tests for profile, watchlist, and auth flows.",
+      "acceptanceCriteria": [
+        "Create e2e/profile.yaml: verify stats, no edit button, delete account flow, logout, version",
+        "Create e2e/watchlist.yaml: verify grid display, empty state, remove card, navigate to detail",
+        "Create e2e/auth.yaml: verify login options, guest mode, locked episode triggers subscribe screen",
+        "Test: profile shows real stats (not zero placeholders)",
+        "Test: delete account shows confirmation, confirms logout on success",
+        "Test: watchlist remove shows confirmation before removing",
+        "Test: locked episode tap shows subscribe screen",
+        "All Maestro flows pass on iOS simulator",
+        "Typecheck passes"
+      ],
+      "priority": 40,
+      "passes": true,
+      "notes": "Implemented in iteration 1-2"
+    }
+  ]
+}

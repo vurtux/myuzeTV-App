@@ -1,0 +1,7 @@
+# Smoke test — verify the page loads
+url: http://localhost:8082
+---
+- extendedWaitUntil:
+    visible: ".*"
+    timeout: 60000
+- takeScreenshot: smoke-test
